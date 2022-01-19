@@ -8,32 +8,25 @@ import VisuallyHidden from "../VisuallyHidden";
 
 const STYLES = {
   small: {
-    fontSize: `${14 / 16}rem`,
+    fontSize: 14,
     iconSize: 16,
-    padding: 24,
+    borderThickness: 1,
+    height: 24,
   },
   large: {
-    fontSize: `${18 / 16}rem`,
+    fontSize: 18,
     iconSize: 24,
-    padding: 32,
+    borderThickness: 2,
+    height: 36,
   },
 };
 
-const IconInput = ({ label, icon, width = 250, size, placeholder }) => {
+const IconInput = ({ label, icon, width = 250, size, ...delegated }) => {
   const styles = STYLES[size];
 
   return (
-    <Wrapper
-      style={{ "--width": `${width}px`, "--font-size": styles.fontSize }}
-    >
+    <Wrapper style={{ "--width": `${width}px` }}>
       <VisuallyHidden>{label}</VisuallyHidden>
-      <Input
-        type="text"
-        placeholder={placeholder}
-        style={{
-          "--padding": `${styles.padding}px`,
-        }}
-      />
       <IconWrapper
         style={{
           "--size": `${styles.iconSize}px`,
@@ -41,27 +34,42 @@ const IconInput = ({ label, icon, width = 250, size, placeholder }) => {
       >
         <Icon id={icon} size={styles.iconSize} strokeWidth={1} />
       </IconWrapper>
+      <TextInput
+        {...delegated}
+        style={{
+          "--height": `${styles.height / 16}rem`,
+          "--border": `${styles.borderThickness}px`,
+          "--font-size": `${styles.fontSize / 16}rem`,
+        }}
+      />
     </Wrapper>
   );
 };
 
-const Wrapper = styled.div`
+const Wrapper = styled.label`
+  display: block;
   position: relative;
   width: var(--width);
+  color: ${COLORS.gray700};
+
+  &:hover {
+    color: ${COLORS.black};
+  }
 `;
 
-const Input = styled.input`
+const TextInput = styled.input`
   font-size: var(--font-size);
   appearance: none;
-  border: 0;
-  padding: 4px var(--padding);
+  padding: 4px var(--height);
+  height: var(--height);
   width: 100%;
-  border-bottom: 1px solid ${COLORS.black};
+  border: none;
+  border-bottom: var(--border) solid ${COLORS.black};
   font-weight: 700;
   color: ${COLORS.gray500};
 
   &::placeholder {
-    font-weight: normal;
+    font-weight: 400;
     color: ${COLORS.gray700};
   }
 
@@ -69,25 +77,16 @@ const Input = styled.input`
     outline-offset: 2px;
   }
 
-  &:hover {
-    color: ${COLORS.black};
-  }
+  color: inherit;
 `;
 
 const IconWrapper = styled.div`
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 0;
-  margin: auto;
+  margin: auto 0;
   height: var(--size);
   width: var(--size);
-  pointer-events: none;
-  color: ${COLORS.gray700};
-
-  ${Input}:hover + & {
-    color: ${COLORS.black};
-  }
 `;
 
 export default IconInput;
